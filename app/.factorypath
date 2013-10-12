@@ -1,6 +1,7 @@
 <factorypath>
-    <factorypathentry kind="WKSPJAR" id="/android-bootstrap/compile-libs/dagger-compiler-1.0.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/android-bootstrap/compile-libs/javawriter-1.0.5.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="WKSPJAR" id="/android-bootstrap/libs/dagger-1.0.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="WKSPJAR" id="/android-bootstrap/libs/javax.inject-1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/android-bootstrap/compile-libs/dagger-compiler-1.0.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/android-bootstrap/compile-libs/javawriter-1.0.5.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/android-bootstrap/libs/butterknife-1.3.2.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

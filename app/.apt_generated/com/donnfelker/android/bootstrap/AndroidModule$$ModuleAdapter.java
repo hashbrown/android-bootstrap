@@ -33,41 +33,114 @@ public final class AndroidModule$$ModuleAdapter extends ModuleAdapter<AndroidMod
    */
   @Override
   public void getBindings(Map<String, Binding<?>> map) {
-    map.put("android.content.Context", new ProvideAppContextProvidesAdapter(module));
+    map.put("android.view.inputmethod.InputMethodManager", new ProvideInputMethodManagerProvidesAdapter(module));
+    map.put("android.accounts.AccountManager", new ProvideAccountManagerProvidesAdapter(module));
     map.put("android.content.SharedPreferences", new ProvideDefaultSharedPreferencesProvidesAdapter(module));
     map.put("android.content.pm.ApplicationInfo", new ProvideApplicationInfoProvidesAdapter(module));
-    map.put("android.telephony.TelephonyManager", new ProvideTelephonyManagerProvidesAdapter(module));
-    map.put("android.accounts.AccountManager", new ProvideAccountManagerProvidesAdapter(module));
-    map.put("java.lang.ClassLoader", new ProvideClassLoaderProvidesAdapter(module));
-    map.put("android.content.pm.PackageInfo", new ProvidePackageInfoProvidesAdapter(module));
     map.put("android.app.NotificationManager", new ProvideNotificationManagerProvidesAdapter(module));
-    map.put("android.view.inputmethod.InputMethodManager", new ProvideInputMethodManagerProvidesAdapter(module));
+    map.put("android.content.pm.PackageInfo", new ProvidePackageInfoProvidesAdapter(module));
+    map.put("java.lang.ClassLoader", new ProvideClassLoaderProvidesAdapter(module));
+    map.put("android.content.Context", new ProvideAppContextProvidesAdapter(module));
+    map.put("android.telephony.TelephonyManager", new ProvideTelephonyManagerProvidesAdapter(module));
   }
 
   /**
-   * A {@code Binder<android.content.Context>} implementation which satisfies
+   * A {@code Binder<android.view.inputmethod.InputMethodManager>} implementation which satisfies
    * Dagger's infrastructure requirements including:
    * 
-   * Being a {@code Provider<android.content.Context>} and handling creation and
+   * Owning the dependency links between {@code android.view.inputmethod.InputMethodManager} and its
+   * dependencies.
+   * 
+   * Being a {@code Provider<android.view.inputmethod.InputMethodManager>} and handling creation and
    * preparation of object instances.
    */
-  public static final class ProvideAppContextProvidesAdapter extends Binding<android.content.Context>
-      implements Provider<android.content.Context> {
+  public static final class ProvideInputMethodManagerProvidesAdapter extends Binding<android.view.inputmethod.InputMethodManager>
+      implements Provider<android.view.inputmethod.InputMethodManager> {
     private final AndroidModule module;
+    private Binding<android.content.Context> context;
 
-    public ProvideAppContextProvidesAdapter(AndroidModule module) {
-      super("android.content.Context", null, IS_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideAppContext()");
+    public ProvideInputMethodManagerProvidesAdapter(AndroidModule module) {
+      super("android.view.inputmethod.InputMethodManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideInputMethodManager()");
       this.module = module;
       setLibrary(true);
     }
 
     /**
-     * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<android.content.Context>}.
+     * Used internally to link bindings/providers together at run time
+     * according to their dependency graph.
      */
     @Override
-    public android.content.Context get() {
-      return module.provideAppContext();
+    @SuppressWarnings("unchecked")
+    public void attach(Linker linker) {
+      context = (Binding<android.content.Context>) linker.requestBinding("android.content.Context", AndroidModule.class);
+    }
+
+    /**
+     * Used internally obtain dependency information, such as for cyclical
+     * graph detection.
+     */
+    @Override
+    public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
+      getBindings.add(context);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<android.view.inputmethod.InputMethodManager>}.
+     */
+    @Override
+    public android.view.inputmethod.InputMethodManager get() {
+      return module.provideInputMethodManager(context.get());
+    }
+  }
+
+  /**
+   * A {@code Binder<android.accounts.AccountManager>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   * 
+   * Owning the dependency links between {@code android.accounts.AccountManager} and its
+   * dependencies.
+   * 
+   * Being a {@code Provider<android.accounts.AccountManager>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class ProvideAccountManagerProvidesAdapter extends Binding<android.accounts.AccountManager>
+      implements Provider<android.accounts.AccountManager> {
+    private final AndroidModule module;
+    private Binding<android.content.Context> context;
+
+    public ProvideAccountManagerProvidesAdapter(AndroidModule module) {
+      super("android.accounts.AccountManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideAccountManager()");
+      this.module = module;
+      setLibrary(true);
+    }
+
+    /**
+     * Used internally to link bindings/providers together at run time
+     * according to their dependency graph.
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void attach(Linker linker) {
+      context = (Binding<android.content.Context>) linker.requestBinding("android.content.Context", AndroidModule.class);
+    }
+
+    /**
+     * Used internally obtain dependency information, such as for cyclical
+     * graph detection.
+     */
+    @Override
+    public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
+      getBindings.add(context);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<android.accounts.AccountManager>}.
+     */
+    @Override
+    public android.accounts.AccountManager get() {
+      return module.provideAccountManager(context.get());
     }
   }
 
@@ -172,22 +245,22 @@ public final class AndroidModule$$ModuleAdapter extends ModuleAdapter<AndroidMod
   }
 
   /**
-   * A {@code Binder<android.telephony.TelephonyManager>} implementation which satisfies
+   * A {@code Binder<android.app.NotificationManager>} implementation which satisfies
    * Dagger's infrastructure requirements including:
    * 
-   * Owning the dependency links between {@code android.telephony.TelephonyManager} and its
+   * Owning the dependency links between {@code android.app.NotificationManager} and its
    * dependencies.
    * 
-   * Being a {@code Provider<android.telephony.TelephonyManager>} and handling creation and
+   * Being a {@code Provider<android.app.NotificationManager>} and handling creation and
    * preparation of object instances.
    */
-  public static final class ProvideTelephonyManagerProvidesAdapter extends Binding<android.telephony.TelephonyManager>
-      implements Provider<android.telephony.TelephonyManager> {
+  public static final class ProvideNotificationManagerProvidesAdapter extends Binding<android.app.NotificationManager>
+      implements Provider<android.app.NotificationManager> {
     private final AndroidModule module;
     private Binding<android.content.Context> context;
 
-    public ProvideTelephonyManagerProvidesAdapter(AndroidModule module) {
-      super("android.telephony.TelephonyManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideTelephonyManager()");
+    public ProvideNotificationManagerProvidesAdapter(AndroidModule module) {
+      super("android.app.NotificationManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideNotificationManager()");
       this.module = module;
       setLibrary(true);
     }
@@ -213,111 +286,11 @@ public final class AndroidModule$$ModuleAdapter extends ModuleAdapter<AndroidMod
 
     /**
      * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<android.telephony.TelephonyManager>}.
+     * {@code Provider<android.app.NotificationManager>}.
      */
     @Override
-    public android.telephony.TelephonyManager get() {
-      return module.provideTelephonyManager(context.get());
-    }
-  }
-
-  /**
-   * A {@code Binder<android.accounts.AccountManager>} implementation which satisfies
-   * Dagger's infrastructure requirements including:
-   * 
-   * Owning the dependency links between {@code android.accounts.AccountManager} and its
-   * dependencies.
-   * 
-   * Being a {@code Provider<android.accounts.AccountManager>} and handling creation and
-   * preparation of object instances.
-   */
-  public static final class ProvideAccountManagerProvidesAdapter extends Binding<android.accounts.AccountManager>
-      implements Provider<android.accounts.AccountManager> {
-    private final AndroidModule module;
-    private Binding<android.content.Context> context;
-
-    public ProvideAccountManagerProvidesAdapter(AndroidModule module) {
-      super("android.accounts.AccountManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideAccountManager()");
-      this.module = module;
-      setLibrary(true);
-    }
-
-    /**
-     * Used internally to link bindings/providers together at run time
-     * according to their dependency graph.
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void attach(Linker linker) {
-      context = (Binding<android.content.Context>) linker.requestBinding("android.content.Context", AndroidModule.class);
-    }
-
-    /**
-     * Used internally obtain dependency information, such as for cyclical
-     * graph detection.
-     */
-    @Override
-    public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
-      getBindings.add(context);
-    }
-
-    /**
-     * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<android.accounts.AccountManager>}.
-     */
-    @Override
-    public android.accounts.AccountManager get() {
-      return module.provideAccountManager(context.get());
-    }
-  }
-
-  /**
-   * A {@code Binder<java.lang.ClassLoader>} implementation which satisfies
-   * Dagger's infrastructure requirements including:
-   * 
-   * Owning the dependency links between {@code java.lang.ClassLoader} and its
-   * dependencies.
-   * 
-   * Being a {@code Provider<java.lang.ClassLoader>} and handling creation and
-   * preparation of object instances.
-   */
-  public static final class ProvideClassLoaderProvidesAdapter extends Binding<ClassLoader>
-      implements Provider<ClassLoader> {
-    private final AndroidModule module;
-    private Binding<android.content.Context> context;
-
-    public ProvideClassLoaderProvidesAdapter(AndroidModule module) {
-      super("java.lang.ClassLoader", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideClassLoader()");
-      this.module = module;
-      setLibrary(true);
-    }
-
-    /**
-     * Used internally to link bindings/providers together at run time
-     * according to their dependency graph.
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public void attach(Linker linker) {
-      context = (Binding<android.content.Context>) linker.requestBinding("android.content.Context", AndroidModule.class);
-    }
-
-    /**
-     * Used internally obtain dependency information, such as for cyclical
-     * graph detection.
-     */
-    @Override
-    public void getDependencies(Set<Binding<?>> getBindings, Set<Binding<?>> injectMembersBindings) {
-      getBindings.add(context);
-    }
-
-    /**
-     * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<java.lang.ClassLoader>}.
-     */
-    @Override
-    public ClassLoader get() {
-      return module.provideClassLoader(context.get());
+    public android.app.NotificationManager get() {
+      return module.provideNotificationManager(context.get());
     }
   }
 
@@ -372,22 +345,22 @@ public final class AndroidModule$$ModuleAdapter extends ModuleAdapter<AndroidMod
   }
 
   /**
-   * A {@code Binder<android.app.NotificationManager>} implementation which satisfies
+   * A {@code Binder<java.lang.ClassLoader>} implementation which satisfies
    * Dagger's infrastructure requirements including:
    * 
-   * Owning the dependency links between {@code android.app.NotificationManager} and its
+   * Owning the dependency links between {@code java.lang.ClassLoader} and its
    * dependencies.
    * 
-   * Being a {@code Provider<android.app.NotificationManager>} and handling creation and
+   * Being a {@code Provider<java.lang.ClassLoader>} and handling creation and
    * preparation of object instances.
    */
-  public static final class ProvideNotificationManagerProvidesAdapter extends Binding<android.app.NotificationManager>
-      implements Provider<android.app.NotificationManager> {
+  public static final class ProvideClassLoaderProvidesAdapter extends Binding<ClassLoader>
+      implements Provider<ClassLoader> {
     private final AndroidModule module;
     private Binding<android.content.Context> context;
 
-    public ProvideNotificationManagerProvidesAdapter(AndroidModule module) {
-      super("android.app.NotificationManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideNotificationManager()");
+    public ProvideClassLoaderProvidesAdapter(AndroidModule module) {
+      super("java.lang.ClassLoader", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideClassLoader()");
       this.module = module;
       setLibrary(true);
     }
@@ -413,31 +386,58 @@ public final class AndroidModule$$ModuleAdapter extends ModuleAdapter<AndroidMod
 
     /**
      * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<android.app.NotificationManager>}.
+     * {@code Provider<java.lang.ClassLoader>}.
      */
     @Override
-    public android.app.NotificationManager get() {
-      return module.provideNotificationManager(context.get());
+    public ClassLoader get() {
+      return module.provideClassLoader(context.get());
     }
   }
 
   /**
-   * A {@code Binder<android.view.inputmethod.InputMethodManager>} implementation which satisfies
+   * A {@code Binder<android.content.Context>} implementation which satisfies
    * Dagger's infrastructure requirements including:
    * 
-   * Owning the dependency links between {@code android.view.inputmethod.InputMethodManager} and its
-   * dependencies.
-   * 
-   * Being a {@code Provider<android.view.inputmethod.InputMethodManager>} and handling creation and
+   * Being a {@code Provider<android.content.Context>} and handling creation and
    * preparation of object instances.
    */
-  public static final class ProvideInputMethodManagerProvidesAdapter extends Binding<android.view.inputmethod.InputMethodManager>
-      implements Provider<android.view.inputmethod.InputMethodManager> {
+  public static final class ProvideAppContextProvidesAdapter extends Binding<android.content.Context>
+      implements Provider<android.content.Context> {
+    private final AndroidModule module;
+
+    public ProvideAppContextProvidesAdapter(AndroidModule module) {
+      super("android.content.Context", null, IS_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideAppContext()");
+      this.module = module;
+      setLibrary(true);
+    }
+
+    /**
+     * Returns the fully provisioned instance satisfying the contract for
+     * {@code Provider<android.content.Context>}.
+     */
+    @Override
+    public android.content.Context get() {
+      return module.provideAppContext();
+    }
+  }
+
+  /**
+   * A {@code Binder<android.telephony.TelephonyManager>} implementation which satisfies
+   * Dagger's infrastructure requirements including:
+   * 
+   * Owning the dependency links between {@code android.telephony.TelephonyManager} and its
+   * dependencies.
+   * 
+   * Being a {@code Provider<android.telephony.TelephonyManager>} and handling creation and
+   * preparation of object instances.
+   */
+  public static final class ProvideTelephonyManagerProvidesAdapter extends Binding<android.telephony.TelephonyManager>
+      implements Provider<android.telephony.TelephonyManager> {
     private final AndroidModule module;
     private Binding<android.content.Context> context;
 
-    public ProvideInputMethodManagerProvidesAdapter(AndroidModule module) {
-      super("android.view.inputmethod.InputMethodManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideInputMethodManager()");
+    public ProvideTelephonyManagerProvidesAdapter(AndroidModule module) {
+      super("android.telephony.TelephonyManager", null, NOT_SINGLETON, "com.donnfelker.android.bootstrap.AndroidModule.provideTelephonyManager()");
       this.module = module;
       setLibrary(true);
     }
@@ -463,11 +463,11 @@ public final class AndroidModule$$ModuleAdapter extends ModuleAdapter<AndroidMod
 
     /**
      * Returns the fully provisioned instance satisfying the contract for
-     * {@code Provider<android.view.inputmethod.InputMethodManager>}.
+     * {@code Provider<android.telephony.TelephonyManager>}.
      */
     @Override
-    public android.view.inputmethod.InputMethodManager get() {
-      return module.provideInputMethodManager(context.get());
+    public android.telephony.TelephonyManager get() {
+      return module.provideTelephonyManager(context.get());
     }
   }
 }
